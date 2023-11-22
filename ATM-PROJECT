@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="balance">Balance: $0</div>
+    <button onclick="checkBalance()">Check Balance</button>
+    <button onclick="withdraw()">Withdraw</button>
+    <button onclick="deposit()">Deposit</button>
+    <button onclick="viewTransactions()">View Transactions</button>
+    <div id="transactionHistory">Transaction History:</div>
+    <script>
+        // ATM object
+const ATM = {
+    balance: 0,
+    transactionHistory: [],
+
+    checkBalance: function (callback) {
+        setTimeout(() => {
+            callback(this.balance);
+        }, 1000);
+    },
+
+    withdraw: function (amount, callback) {
+        setTimeout(() => {
+            if (amount > this.balance) {
+                callback("Insufficient funds");
+            } else {
+                this.balance -= amount;
+                this.transactionHistory.push(`Withdraw: $${amount}`);
+                callback(null, `Withdrawal successful. New balance: $${this.balance}`);
+            }
+        }, 1500);
+    },
+
+    deposit: function (amount, callback) {
+        setTimeout(() => {
+            this.balance += amount;
+            this.transactionHistory.push(`Deposit: $${amount}`);
+            callback(`Deposit successful. New balance: $${this.balance}`);
+        }, 1000);
+    },
+
+    viewTransactions: function (callback) {
+        setTimeout(() => {
+            callback(this.transactionHistory);
+        }, 500);
+    },
+};
+
+// Functions for handling button clicks
+function checkBalance() {
+    ATM.checkBalance((balance) => {
+        document.getElementById("balance").innerText = `Balance: $${balance}`;
+    });
+}
+
+function withdraw() {
+    const amount = parseFloat(prompt("Enter withdrawal amount:"));
+    ATM.withdraw(amount, (error, message) => {
+        alert(error ? error : message);
+    });
+}
+
+function deposit() {
+    const amount = parseFloat(prompt("Enter deposit amount:"));
+    ATM.deposit(amount, (message) => {
+        alert(message);
+    });
+}
+
+function viewTransactions() {
+    ATM.viewTransactions((transactions) => {
+        document.getElementById("transactionHistory").innerText = `Transaction History:\n${transactions.join("\n")}`;
+    });
+}
+
+    </script>
+</body>
+</html>
